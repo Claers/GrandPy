@@ -18,3 +18,7 @@ def test_get_article_Url():
 def test_get_article_Desc():
 	response = wikiClient.getArticleDesc("France")
 	assert response == "La France (), en forme longue depuis 1875 la République française (), est un État transcontinental souverain, dont le territoire métropolitain est situé en Europe de l'Ouest."
+
+def test_get_article_paragraph():
+	response = wikiClient.getArticleParagraph("https://fr.wikipedia.org/wiki/Cit%C3%A9_Paradis")
+	assert response == "La cité Paradis est une voie publique située dans le 10e arrondissement de Paris. Elle est en forme de té, une branche débouche au 43, rue de Paradis, la deuxième au 57, rue d'Hauteville et la troisième en impasse."

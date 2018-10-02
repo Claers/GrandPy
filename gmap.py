@@ -9,7 +9,7 @@ class Map:
 
 	def getLocation(self,locationName):
 		self.url = parse.urljoin(parse.urljoin("https://maps.googleapis.com/maps/api/", "geocode/"), "json")
-		raw_respone = requests.get(self.url,params = dict(key=self.key,address=locationName))
-		response = raw_respone.json()
+		raw_response = requests.get(self.url,params = dict(key=self.key,address=locationName))
+		response = raw_response.json()
 		return response
 
