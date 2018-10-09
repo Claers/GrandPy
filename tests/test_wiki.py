@@ -1,24 +1,34 @@
 import pytest
 import json
 import sys
+import requests
+from io import BytesIO
+
 
 sys.path.append("../")
 
-from wiki import *
+from grandpy.wiki import *
 
 wikiClient = Wiki("wikiclient")
 
 def test_create_wiki():
 	assert wikiClient.name == "wikiclient"
 
-def test_get_article_Url():
-	response = wikiClient.getArticleUrl("France")
-	assert response == "https://fr.wikipedia.org/wiki/France"
+def test_get_article(monkeypatch):
+	results = {
+		'batchcomplete': '', 'query': {'pages': {'7508': {'pageid': 7508, 'ns': 0, 'title': 'La Réunion', 'index': 0, 'terms': {'description': ["département et région d'outre-mer français situé dans l'Océan indien"]}, 'contentmodel': 'wikitext', 'pagelanguage': 'fr', 'pagelanguagehtmlcode': 'fr', 'pagelanguagedir': 'ltr', 'touched': '2018-10-03T11:08:55Z', 'lastrevid': 152681604, 'length': 117457, 'fullurl': 'https://fr.wikipedia.org/wiki/La_R%C3%A9union', 'editurl': 'https://fr.wikipedia.org/w/index.php?title=La_R%C3%A9union&action=edit', 'canonicalurl': 'https://fr.wikipedia.org/wiki/La_R%C3%A9union'}}}
+	}
+
+	def mockreturn(request):
+		return json.dumps(results)
+
+	monkeypatch.setattr(requests, 'get', mockreturn)
+	
+	resp = wikiClient.getArticle({'lat': -21.115141, 'lng': 55.53638400000001},"1000")
+	resp = json.loads(resp)
+	assert resp['query']['pages']['7508']['pageid'] == 7508
 
 def test_get_article_Desc():
 	response = wikiClient.getArticleDesc("France")
 	assert response == "La France (), en forme longue depuis 1875 la République française (), est un État transcontinental souverain, dont le territoire métropolitain est situé en Europe de l'Ouest."
 
-def test_get_article_paragraph():
-	response = wikiClient.getArticleParagraph("https://fr.wikipedia.org/wiki/Cit%C3%A9_Paradis")
-	assert response == "La cité Paradis est une voie publique située dans le 10e arrondissement de Paris. Elle est en forme de té, une branche débouche au 43, rue de Paradis, la deuxième au 57, rue d'Hauteville et la troisième en impasse."

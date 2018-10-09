@@ -4,7 +4,7 @@ import sys
 
 sys.path.append("../")
 
-from gmap import *
+from grandpy.gmap import *
 
 map = Map("map","your_api_key")
 
@@ -14,7 +14,7 @@ def test_create_map():
 def test_map_server_response():
 	response = map.getLocation("Réunion")
 	assert response["status"] == "OK"
-	assert response['results'][0]['address_components'][0]['long_name'] == "Réunion"
+	assert response['result']['name'] == "Réunion"
 
 
 

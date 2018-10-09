@@ -6,4 +6,7 @@ The objective is to develop a Web App with Flask using the Test Driven Developme
 ###Dependencies
 - Python 3.6.x
 - Flask 1.0.x
+- BeautifulSoup4 4.6.x
+- Requests 2.19.x
 - Pytest 3.8.x (ONLY FOR TESTS)
+

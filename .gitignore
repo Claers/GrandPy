@@ -2,3 +2,6 @@
 config.py
 .coverage
 /htmlcov
+__pycache__
+grandpy/__pycache__/
+tests/__pycache__/

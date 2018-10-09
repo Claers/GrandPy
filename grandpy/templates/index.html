@@ -3,38 +3,259 @@
 <head>
 	<title>GrandPyBot</title>
 	<link rel="icon" type="image/png" href="../static/image/favicon.png" />
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 	<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 	<style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
-      #map {
-        height: 50%;
-        width: 50%;
+      body{
+        background-color: #3498db; 
       }
-      /* Optional: Makes the sample page fill the window. */
-      html, body {
+      a{
+        text-decoration: none;
+        font-weight: bold;
+        color: #d35400;
+      }
+      .map {
+        height: 300px;
+      }
+
+      #header{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      #footer{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+      }
+
+      .grandpy-ans{
+        border: 2px solid #4a69bd;
+        background-color: rgba(74, 105, 189,0.5);
+        border-radius : 5px;
         height: 100%;
-        margin: 0;
-        padding: 0;
+        width: 100%;
       }
+      .question{
+        border: 2px solid #fa983a;
+        background-color: rgba(250, 152, 58,0.5);
+        border-radius : 5px;
+      }
+      .textbox{
+        width: 90%;
+      }
+
+      .container{
+        background:#2980b9;
+        height:700px;
+        overflow:hidden;
+        max-width: 100%;
+      }
+
+      #chat{
+        overflow-y: scroll;
+        height: 100%;
+        box-sizing: content-box;
+      }
+
+      .loader {
+          border: 16px solid #f3f3f3; /* Light grey */
+          border-top: 16px solid #3498db; /* Blue */
+          border-radius: 50%;
+          width: 120px;
+          height: 120px;
+          animation: spin 2s linear infinite;
+      }
+
+      @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+      }
+
+      ::-webkit-scrollbar {
+    width: 0px;  /* remove scrollbar space */
+    background: transparent;  /* optional: just make scrollbar invisible */
+}
+/* optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+    background: #FF0000;
+}
+
     </style>
 </head>
 <body>
-<div id="map"></div>
-<input class="textbox" type="text" >
-<button onclick="send()" class="but">Envoyer</button>
-<div id="map"></div>
+<div id="header">
+    <img src="../static/image/favicon.png">
+    <div style="max-width: 80%;">
+      <h1 style="font-size: 2vw;">Bienvenue a toi sur GrandPyBot, le robot qui en connais beaucoup sur le monde !</h1> 
+      <p style="font-size: 1.5vw;">N'hésite pas a me poser une question mais pour que je te réponde au mieux soit le plus précis possible.</p>
+    </div>
+    <img src="../static/image/favicon.png">
+</div>
 
-<script id="jsdel">
-	var gKeyTemp = {{ config['GOOGLEMAP_KEY']|tojson }};
-</script>
+<div class="container">
+  <div id="chat" class="row">
+  </div>
+</div>
+
+<div class="input-group textInput">
+  <input type="text" class="form-control textbox" placeholder="Pose ta question" aria-label="Pose ta question" aria-describedby="basic-addon2">
+  <div class="input-group-append">
+    <button onclick="send()" class="btn" type="button">Envoyer</button>
+  </div>
+</div>
+
+<div id="footer">
+    <div style="max-width: 80%;">
+      <p>Site fait par Florent Ferrere</p>
+      <a href="https://github.com/Claers/GrandPy">Github</a>
+      <a href="https://twitter.com/Flo_Okami">Twitter</a>
+    </div>
+</div>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 
-<script type="text/javascript" src="../static/js/script.js"></script>
+<script>
+var nb = 0;
+var words = ["petit","bichon","ptit loup","grand"];
+  function send() {
+    console.log($('.textbox').val());
+    var search_word = $('.textbox').val();
+    if(search_word != ""){
+      $('.textbox').val("");
+      var qurl="http://localhost:5000";
+      var loading = document.createElement("div");
+      loading.className = "loader";
+      var container = document.createElement("div");
+      container.className = "col-lg-12 col-offset-3";
+      var questionRow = document.createElement("div");
+      questionRow.className = "row";
+      container.append(questionRow);
+      var questionPad = document.createElement("div");
+      questionPad.className = "col-lg-7";
+      questionRow.append(questionPad);
+      var questionBox = document.createElement("div");
+      questionBox.className = "col-lg-5 text-right question";
+      questionBox.append(search_word);
+      questionRow.append(questionBox);
+      $('#chat').append(container,loading);
+      var objDiv = document.getElementById("chat");
+      objDiv.scrollTop = objDiv.scrollHeight;
+      $.ajax({
+              type: "POST",
+              cache: false,
+              data:{keyword:search_word},
+              url: qurl,
+              dataType: "json",
+              success: function(data) { 
+                  var resp = data;
+                  if(resp != "error" && resp != "AccessDenied" && resp !="NoTxt"){
+                      var ansRow = document.createElement("div");
+                      ansRow.className = "row";
+                      var preText = ""
+                      if(search_word.includes("?")){
+                        preText = "Bien sur mon "+ words[Math.floor(Math.random()*words.length)] + " ! Voici son addresse : ";
+                      }
+                      else{
+                        preText = "Son addresse : ";
+                      }
+                      var ansTxtDesc = document.createElement("div");
+                      ansTxtDesc.className = "col-lg-7 grandpy-ans";
+                      ansTxtDesc.append(preText + resp[0]['result']['formatted_address']);
+                      ansRow.append(ansTxtDesc);
+                      var mapContainer = document.createElement("div");
+                      mapContainer.className = "card narrower";
+                      ansTxtDesc.append(mapContainer);
+                      var mapBody = document.createElement("div");
+                      mapBody.className = "card-body card-body-cascade text-center";
+                      mapContainer.append(mapBody);
+                      var map;
+                      var mapelem = document.createElement("div");
+                      mapelem.setAttribute('id','map'+nb);
+                      mapelem.className = "z-depth-1 map";                  
+                      mapBody.append(mapelem);
+                      var ansTxt = document.createElement("div");
+                      ansTxt.className = "col-lg-7 grandpy-ans";
+                      ansTxt.append(createText(resp));
+                      ansRow.append(ansTxt);
+                      container.append(ansRow);
+                      objDiv.scrollTop = objDiv.scrollHeight;
+                      loading.remove()
+                      longlat = resp[0]['result']['geometry']['location'];
+                      map = new google.maps.Map(mapelem, {
+                        center: {lat: longlat['lat'], lng: longlat['lng']},
+                        zoom: 8
+                      });
+                      var marker = new google.maps.Marker({
+                      position: {lat: longlat['lat'], lng: longlat['lng']},
+                        map: map,
+                        title: resp[0]['result']['formatted_address']
+                      });
+                      map.setZoom(17);
+                      map.panTo(marker.position);
+                      objDiv.scrollTop = objDiv.scrollHeight;
+                    }
+                  else{
+                    if(resp == "AccessDenied"){
+                      console.log("AccessDenied");
+                    }
+                    else if(resp == "error"){
+                      var ansRow = document.createElement("div");
+                      ansRow.className = "row";
+                      var ansTxt = document.createElement("div");
+                      ansTxt.className = "col-lg-7 grandpy-ans";
+                      ansTxt.append("Je n'ai pas très bien compris ce que vous m'avez dit !");
+                      ansRow.append(ansTxt);
+                      container.append(ansRow);
+                      loading.remove()
+                    }
+                    else if(resp == "NoTxt"){
+                      console.log("NoTxt");
+                    }
+                  }
+                  nb += 1;                 
+              },
+              error: function(jqXHR) {
+                  alert("error: " + jqXHR.status);
+                  console.log(jqXHR);
+              }
+          })
+  }
+};
 
-<script id="jsdelz" src="https://maps.googleapis.com/maps/api/js?key={{ config['GOOGLEMAP_KEY']}}&callback=initMap"
+function createText(data){
+  var articleUrl = data[1];
+  var articleDesc = data[2];
+  var txt = document.createElement('p');
+  var url = document.createElement('a');
+  var linkText = document.createTextNode("Wikipedia");
+  if(articleUrl == null || articleDesc == "InternalError"){
+    return "Oh je ne connais pas du tout cet endroit. Surement un trou de mémoire !"
+  }
+  else{
+    if(articleDesc == ""){
+      articleDesc = "Oh je ne connais pas grand-chose de cet endroit mais je peux te laisser aller sur Wikipedia pour avoir plus d'informations ! "
+    }
+    url.appendChild(linkText)
+    url.href = articleUrl;
+    url.setAttribute('target','_blank');
+    txt.append(articleDesc + "[En savoir plus sur ") 
+    txt.append(url);
+    txt.append("]")
+    return txt;
+  }
+}
+
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{ config['GOOGLEMAP_KEY']}}"
     async defer></script>
+
+<script type="text/javascript" src="../static/js/script.js"></script>
 
 
 </body>
