@@ -126,12 +126,13 @@
 <script>
 var nb = 0;
 var words = ["petit","bichon","ptit loup","grand"];
+
   function send() {
-    console.log($('.textbox').val());
     var search_word = $('.textbox').val();
     if(search_word != ""){
       $('.textbox').val("");
       var qurl="http://localhost:5000";
+      // Create the question renderer
       var loading = document.createElement("div");
       loading.className = "loader";
       var container = document.createElement("div");
@@ -157,14 +158,13 @@ var words = ["petit","bichon","ptit loup","grand"];
               dataType: "json",
               success: function(data) { 
                   var resp = data;
-                  console.log(resp)
                   if(resp != "error" && resp != "AccessDenied" && resp != null){
+                      // Create the answer renderer
                       var ansRow = document.createElement("div");
                       ansRow.className = "row";
                       var preText = ""
                       var ansTxtDesc = document.createElement("div");
                       ansTxtDesc.className = "col-lg-7 grandpy-ans";
-                      console.log(resp[1]);
                       if(resp[1] != "NoTxt"){
                         if(search_word.includes("?")){
                           preText = "Bien sur mon "+ words[Math.floor(Math.random()*words.length)] + " ! Voici son addresse : ";
