@@ -1,3 +1,1 @@
-web: gunicorn --log-file=- grandpy:app
-init: FLASK_APP=run.py flask
-
+web: python3 run.py
