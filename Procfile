@@ -1,2 +1,2 @@
-python run.py
-init: FLASK_APP=run.py flask
+web: gunicorn grandpy:app
+python3 run.py
