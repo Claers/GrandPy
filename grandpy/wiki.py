@@ -11,7 +11,7 @@ class Wiki:
 		self.name = name
 		self.articles = {}
 
-	def getArticle(self,location,locRange):
+	def getArticleWithLocation(self,location,locRange):
 		print(location)
 		self.url = "https://fr.wikipedia.org/w/api.php?action=query&format=json&prop=pageterms%7Cinfo&list=&meta=&generator=geosearch&wbptcontinue=&wbptterms=description&inprop=url&ggscoord=" + str(location['lat']) + "|" + str(location['lng']) + "&ggsradius="+locRange+"&ggslimit=10" 
 		raw_response = requests.get(self.url)
@@ -21,7 +21,7 @@ class Wiki:
 		else:
 			return raw_response
 
-	def getArticleDesc(self,name):
+	def getArticleWithName(self,name):
 		self.url = "https://fr.wikipedia.org/w/api.php?action=opensearch&search=" + name
 		raw_response = requests.get(self.url)
 		response = raw_response.json()
@@ -29,7 +29,7 @@ class Wiki:
 			if(response[1] == []):
 				return None
 			else:
-				return unquote(response[2][0])
+				return response
 		else:
 			return raw_response
 		

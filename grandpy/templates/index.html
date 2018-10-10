@@ -157,19 +157,23 @@ var words = ["petit","bichon","ptit loup","grand"];
               dataType: "json",
               success: function(data) { 
                   var resp = data;
-                  if(resp != "error" && resp != "AccessDenied" && resp !="NoTxt"){
+                  console.log(resp)
+                  if(resp != "error" && resp != "AccessDenied" && resp != null){
                       var ansRow = document.createElement("div");
                       ansRow.className = "row";
                       var preText = ""
-                      if(search_word.includes("?")){
-                        preText = "Bien sur mon "+ words[Math.floor(Math.random()*words.length)] + " ! Voici son addresse : ";
-                      }
-                      else{
-                        preText = "Son addresse : ";
-                      }
                       var ansTxtDesc = document.createElement("div");
                       ansTxtDesc.className = "col-lg-7 grandpy-ans";
-                      ansTxtDesc.append(preText + resp[0]['result']['formatted_address']);
+                      console.log(resp[1]);
+                      if(resp[1] != "NoTxt"){
+                        if(search_word.includes("?")){
+                          preText = "Bien sur mon "+ words[Math.floor(Math.random()*words.length)] + " ! Voici son addresse : ";
+                        }
+                        else{
+                          preText = "Son addresse : ";
+                        }
+                        ansTxtDesc.append(preText + resp[0]['result']['formatted_address']); 
+                      }
                       ansRow.append(ansTxtDesc);
                       var mapContainer = document.createElement("div");
                       mapContainer.className = "card narrower";
@@ -184,7 +188,12 @@ var words = ["petit","bichon","ptit loup","grand"];
                       mapBody.append(mapelem);
                       var ansTxt = document.createElement("div");
                       ansTxt.className = "col-lg-7 grandpy-ans";
-                      ansTxt.append(createText(resp));
+                      if(resp[1] != "NoTxt"){
+                        ansTxt.append(createText(resp));
+                      }
+                      else{
+                        ansTxt.append("Je ne connais pas cet endroit malheureusement.");
+                      }
                       ansRow.append(ansTxt);
                       container.append(ansRow);
                       objDiv.scrollTop = objDiv.scrollHeight;
@@ -205,7 +214,14 @@ var words = ["petit","bichon","ptit loup","grand"];
                     }
                   else{
                     if(resp == "AccessDenied"){
-                      console.log("AccessDenied");
+                      var ansRow = document.createElement("div");
+                      ansRow.className = "row";
+                      var ansTxt = document.createElement("div");
+                      ansTxt.className = "col-lg-7 grandpy-ans";
+                      ansTxt.append("Il semblerais que mon accès a internet ne fonctionne plus !");
+                      ansRow.append(ansTxt);
+                      container.append(ansRow);
+                      loading.remove()
                     }
                     else if(resp == "error"){
                       var ansRow = document.createElement("div");
@@ -217,8 +233,15 @@ var words = ["petit","bichon","ptit loup","grand"];
                       container.append(ansRow);
                       loading.remove()
                     }
-                    else if(resp == "NoTxt"){
-                      console.log("NoTxt");
+                    else if(resp == null){
+                      var ansRow = document.createElement("div");
+                      ansRow.className = "row";
+                      var ansTxt = document.createElement("div");
+                      ansTxt.className = "col-lg-7 grandpy-ans";
+                      ansTxt.append("Je n'ai pas très bien compris ce que vous m'avez dit !");
+                      ansRow.append(ansTxt);
+                      container.append(ansRow);
+                      loading.remove()
                     }
                   }
                   nb += 1;                 
