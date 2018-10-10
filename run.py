@@ -5,4 +5,4 @@ import json
 # Launch the flask app in debug mode
 if __name__ == "__main__":
     app.debug = True
-    app.run()
+    app.run(host='0.0.0.0')
