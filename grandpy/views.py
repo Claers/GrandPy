@@ -99,3 +99,7 @@ def getResp(query):  # The function used for data manipulation
             return "AccessDenied"  # If google maps raised a access error
     else:
         return "error"  # If the parsed query is empty
+
+if __name__ == "__main__":
+    app.debug = True
+    app.run(host='0.0.0.0')
