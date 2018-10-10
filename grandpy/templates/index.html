@@ -131,7 +131,7 @@ var words = ["petit","bichon","ptit loup","grand"];
     var search_word = $('.textbox').val();
     if(search_word != ""){
       $('.textbox').val("");
-      var qurl="http://localhost:5000";
+      var qurl=window.location.href;
       // Create the question renderer
       var loading = document.createElement("div");
       loading.className = "loader";
