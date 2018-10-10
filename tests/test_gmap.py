@@ -6,7 +6,7 @@ sys.path.append("../")
 
 from grandpy.gmap import *
 
-map = Map("map","AIzaSyCiGYAXBI0xmj1SVqAVYDHUA-6ceTPXbT8")
+map = Map("map","your_apikey")
 
 def test_create_map():
 	assert map.name == "map"
