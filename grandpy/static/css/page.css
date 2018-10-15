@@ -1,0 +1,82 @@
+
+      body{
+        background-color: #2d3436; 
+      }
+      a{
+        text-decoration: none;
+        font-weight: bold;
+        color: #d35400;
+      }
+      .map {
+        height: 300px;
+      }
+
+      #header{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: white;
+      }
+
+      #footer{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: white;
+      }
+
+      .grandpy-ans{
+        border: 2px solid #4a69bd;
+        background-color: rgba(74, 105, 189,0.5);
+        border-radius : 5px;
+        height: 100%;
+        width: 100%;
+      }
+
+      .question{
+        border: 2px solid #fa983a;
+        background-color: rgba(250, 152, 58,0.5);
+        border-radius : 5px;
+      }
+      .textbox{
+        width: 90%;
+      }
+
+      .container{
+        background:#636e72;
+        height:700px;
+        overflow:hidden;
+        max-width: 100%;
+      }
+
+      #chat{
+        overflow-y: scroll;
+        height: 100%;
+        box-sizing: content-box;
+        color: white;
+      }
+
+      .loader {
+          border: 16px solid #f3f3f3; /* Light grey */
+          border-top: 16px solid #3498db; /* Blue */
+          border-radius: 50%;
+          width: 120px;
+          height: 120px;
+          animation: spin 2s linear infinite;
+      }
+
+      @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+      }
+
+      ::-webkit-scrollbar {
+    width: 0px;  /* remove scrollbar space */
+    background: transparent;  /* optional: just make scrollbar invisible */
+}
+/* optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+    background: #FF0000;
+}
