@@ -32,10 +32,11 @@ def getResp(query):  # The function used for data manipulation
 
     string = query
     string = parser(string)  # Parse the query with the parser function
+    print(string)
     if(string != ""):
         # First try to get a location on the map with google maps
         loc = map.getLocation(string)
-        if(loc != "Nothing" and loc != "AccessDenied"):
+        if(loc != "Nothing" and loc != "AccessDenied" and loc !="InternalError"):
             articleUrl = ""
             # Second try ro get a wiki article with the name of the location
             wikiO.article = wikiO.getArticleWithName(string)
@@ -93,7 +94,7 @@ def getResp(query):  # The function used for data manipulation
                             return [loc, 'NoTxt']  # If no article is found
             else:
                 return [loc, 'NoTxt']  # If no article is found
-        elif(loc == "Nothing"):
+        elif(loc == "Nothing" or loc !="InternalError"):
             return "error"  # If nothing is found
         elif(loc == "AccessDenied"):
             return "AccessDenied"  # If google maps raised a access error

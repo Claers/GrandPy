@@ -38,7 +38,8 @@ $('body').keydown (function(e){
               dataType: "json",
               success: function(data) { 
                   var resp = data;
-                  if(resp != "error" && resp != "AccessDenied" && resp != null){
+                  if(resp != "error" && resp != "AccessDenied" && resp != null && resp != "InternalError"){
+                      console.log(resp);
                       // Create the answer renderer
                       var ansRow = document.createElement("div");
                       ansRow.className = "row";
@@ -103,7 +104,7 @@ $('body').keydown (function(e){
                       container.append(ansRow);
                       loading.remove()
                     }
-                    else if(resp == "error"){
+                    else if(resp == "error" || resp == "InternalError"){
                       var ansRow = document.createElement("div");
                       ansRow.className = "row";
                       var ansTxt = document.createElement("div");
